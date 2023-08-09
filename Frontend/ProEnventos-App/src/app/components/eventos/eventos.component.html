@@ -1,5 +1,5 @@
 
-<h2>Eventos</h2>
+<app-titulo [titulo]="'Eventos'"></app-titulo>
 <hr>
 
 <div class="form-inline">
@@ -14,15 +14,15 @@
   <thead class="thead-dark">
     <tr>
       <th>
-        <button type="button" class="btn btn-outline-light btn-sm" (click)="alterImg()">
-          {{!showImg ? 'Exibir' : 'Ocultar'}}
+        <button type="button" class="btn btn-outline-light btn-sm" (click)="alterImg()" >
+          <i class="{{!showImg ? 'fa fa-eye' : 'fa fa-eye-slash'}}"></i>
         </button>
       </th>
       <th>#</th>
       <th>Tema</th>
       <th>Local</th>
       <th>Data</th>
-      <th>Qtd</th>
+      <th>Qtd Pessoas</th>
       <th>Lote</th>
       <th>Opções</th>
     </tr>
@@ -33,15 +33,19 @@
         <img [collapse]="!showImg" [isAnimated]="true" src="/assets/{{evento.imagemURL}}"
           alt="imagem" [style.width.px]="widthImg" [style.margin.px]="marginImg" >
         </td>
-      <td>{{evento.eventoId}}</td>
+      <td>{{evento.id}}</td>
       <td>{{evento.tema}}</td>
-      <td>{{evento.lote}}</td>
-      <td>{{evento.dataEvento}}</td>
-      <td>{{evento.qtdPessoas}}</td>
       <td>{{evento.local}}</td>
+      <td>{{evento.dataEvento | DateFormatPipe}}</td>
+      <td>{{evento.qtdPessoas}}</td>
+      <td>{{evento.lotes[0].nome | uppercase}}</td>
       <td>
-        <button type="button" class="btn btn-warning btn-sm mr-2">Editar</button>
-        <button type="button" class="btn btn-danger btn-sm">Remover</button>
+        <button type="button" class="btn btn-warning btn-sm mr-2" tooltip="Editar">
+          <i class="fa fa-edit"></i>
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" tooltip="Excluir" (click)="openModal(template)">
+          <i class="fa fa-trash"></i>
+        </button>
       </td>
     </tr>
   </tbody>
@@ -54,3 +58,10 @@
   </tfoot>
 </table>
 
+<ng-template #template>
+  <div class="modal-body text-center">
+    <p>Tem certeza que deseja excluir este evento?</p>
+    <button type="button" class="btn btn-default" (click)="confirm()" >Sim</button>
+    <button type="button" class="btn btn-primary" (click)="decline()" >Não</button>
+  </div>
+</ng-template>
