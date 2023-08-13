@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { EventoService } from 'src/app/services/evento.service';
+import { EventoService } from '@app/services/evento.service';
 import { Evento } from 'src/models/Evento';
 
 @Component({
