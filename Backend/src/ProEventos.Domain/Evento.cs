@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProEventos.Domain
 {
+    //[Table("Eventos")]
     public class Evento
     {
+        //[Key]
         public int Id { get; set; }
         public string Local { get; set; }
         public DateTime? DataEvento { get; set; }
