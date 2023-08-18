@@ -16,6 +16,7 @@ export class EventoListaComponent implements OnInit {
   modalRef?: BsModalRef;
   public eventos: Evento[] = [];
   public filtredEvents: Evento[] = [];
+  public eventoId = 0;
   public widthImg = 150;
   public marginImg = 2;
   public showImg = true;
@@ -49,33 +50,46 @@ export class EventoListaComponent implements OnInit {
 
   public ngOnInit(): void {
     this.spinner.show();
-    this.getEventos();
+    this.carregarEventos();
   }
 
   public alterImg(): void{
     this.showImg = !this.showImg;
   }
 
-  public getEventos(): void {
-    this.eventoService.getEventos().subscribe({
-      next: (eventos: Evento[]) => {
+  public carregarEventos(): void {
+    this.eventoService.getEventos().subscribe(
+      (eventos: Evento[]) => {
         this.eventos = eventos
         this.filtredEvents = this.eventos
       },
-      error:(error: any) => {
-        this.spinner.hide();
+      (error: any) => {
+        console.log(error);
         this.toastr.error('Erro ao carregar eventos.', 'Algo de inesperado aconteceu!');
-      },
-      complete: () => this.spinner.hide()
-    });
+      }
+    ).add(()=> this.spinner.hide());
   }
-  openModal(template: TemplateRef<any>): void {
+  openModal(event: any ,template: TemplateRef<any>,eventoId: number): void {
+    event.stopPropagation();
+    this.eventoId = eventoId;
     this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
   }
 
   confirm(): void {
     this.modalRef?.hide();
-    this.toastr.success('O evento foi excluído com sucesso.', 'Excluído!');
+    this.spinner.show();
+    this.eventoService.deleteEvento(this.eventoId).subscribe(
+      (result: any) => {
+        if(result.message === 'Excluído'){
+          this.toastr.success('O evento foi excluído com sucesso.', 'Excluído!');
+          this.carregarEventos();
+        }
+      },
+      (error: any) => {
+        console.log(error);
+        this.toastr.error(`Erro ao tentar excluir evento ${this.eventoId}`, 'Erro');
+      },
+    ).add(() => this.spinner.hide());
   }
 
   decline(): void {

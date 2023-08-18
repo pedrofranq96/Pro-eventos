@@ -103,7 +103,7 @@ namespace ProEventos.API.Controllers
                 var evento = await _service.GetEventoPorIdAsync(id, true);
                 if(evento == null) return NoContent(); 
 
-                return  await _service.DeleteEvento(id) ? Ok("Excluído.") : throw new Exception("Something went wrong");
+                return  await _service.DeleteEvento(id) ? Ok(new { message = "Excluído"}) : throw new Exception("Something went wrong");
             }
             catch (Exception ex)
             {
