@@ -28,6 +28,9 @@ import { CadastrarUserComponent } from './components/user/cadastrar-user/cadastr
 import {BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
+import { LoteService } from './services/lote.service';
+import { NgxCurrencyModule } from 'ngx-currency';
+
 defineLocale('pt-br', ptBrLocale);
 
 @NgModule({
@@ -45,7 +48,8 @@ defineLocale('pt-br', ptBrLocale);
     EventoListaComponent,
     UserComponent,
     LoginComponent,
-    CadastrarUserComponent
+    CadastrarUserComponent,
+
    ],
   imports: [
     BrowserModule,
@@ -65,10 +69,11 @@ defineLocale('pt-br', ptBrLocale);
     TooltipModule.forRoot(),
     BsDropdownModule.forRoot(),
     NgxSpinnerModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    NgxCurrencyModule
 
   ],
-  providers: [EventoService],
+  providers: [EventoService, LoteService],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
