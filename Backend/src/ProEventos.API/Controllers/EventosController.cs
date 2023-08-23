@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProEventos.Application.Dtos;
@@ -12,9 +15,12 @@ namespace ProEventos.API.Controllers
     public class EventosController : ControllerBase
     {        
         private readonly IEventoService _service;
-        public EventosController(IEventoService service)
+        private readonly IWebHostEnvironment _hostEnvironment;
+
+        public EventosController(IEventoService service, IWebHostEnvironment hostEnvironment)
         {
-            _service = service;            
+            _service = service;
+            _hostEnvironment = hostEnvironment;
         } 
 
         [HttpGet]
@@ -64,6 +70,28 @@ namespace ProEventos.API.Controllers
             }
         }
 
+        [HttpPost("upload-image/{eventoId}")]
+        public async Task<IActionResult> UploadImage(int eventoId){
+            try
+            {
+                var evento = await _service.GetEventoPorIdAsync(eventoId, true);
+                if (evento == null) return NoContent();
+
+                var file = Request.Form.Files[0];
+                if(file.Length > 0){
+                    DeleteImage(evento.ImagemURL);
+                    evento.ImagemURL = await SaveImage(file);
+                }
+                var eventoRetorno = await _service.UpdateEvento(eventoId, evento);
+                return Ok(eventoRetorno);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, 
+                    $"Erro ao tentar adicionar o evento: {ex.Message}");
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post(EventoDto model){
             try
@@ -103,14 +131,43 @@ namespace ProEventos.API.Controllers
                 var evento = await _service.GetEventoPorIdAsync(id, true);
                 if(evento == null) return NoContent(); 
 
-                return  await _service.DeleteEvento(id) ? Ok(new { message = "Excluído"}) : throw new Exception("Something went wrong");
+                if(await _service.DeleteEvento(id)){
+                     DeleteImage(evento.ImagemURL);
+                    return Ok(new { message = "Excluído"});
+                } else {
+                 throw new Exception("Something went wrong");
+                }
             }
             catch (Exception ex)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, 
                     $"Erro ao tentar excluir o evento: {ex.Message}");
             }
-        } 
+        }
+        [NonAction]
+        public async Task<string> SaveImage(IFormFile imageFile){
+            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName)
+                .Take(10).ToArray()).Replace(' ', '-');
+            
+            imageName = $"{imageName}{DateTime.UtcNow.ToString("yymmssfff")}{Path.GetExtension(imageFile.FileName)}";
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resources/Images", imageName);
+
+            using (var fileStream = new FileStream(imagePath, FileMode.Create)){
+                await imageFile.CopyToAsync(fileStream);
+            }
+            return imageName;
+        }
+
+        [NonAction]
+        public void DeleteImage(string imageName){
+
+            if (!string.IsNullOrEmpty(imageName)) {
+                var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @$"Resources/Images", imageName);
+                if(System.IO.File.Exists(imagePath)){
+                    System.IO.File.Delete(imagePath);
+                }
+            }
+        }
     }
 }
 
