@@ -13,8 +13,7 @@ namespace ProEventos.Application
     {
         private readonly IGeralPersist _geralPersist;
         private readonly ILotePersist _lotePersist;
-       private readonly IMapper _mapper;
-
+        private readonly IMapper _mapper;
          public LoteService(IGeralPersist geralPersist,ILotePersist lotePersist,IMapper mapper)
         {
             _lotePersist = lotePersist;
@@ -35,7 +34,6 @@ namespace ProEventos.Application
                 throw new Exception(ex.Message);            
            }
         }
-
         public async Task<LoteDto[]> SaveLotes(int eventoId, LoteDto[] models)
         {
             try
@@ -64,7 +62,6 @@ namespace ProEventos.Application
                 throw new Exception(ex.Message);           
             }
         }
-        
         public async Task<bool> DeleteLote(int eventoId, int loteId)
         {
             try
@@ -87,7 +84,6 @@ namespace ProEventos.Application
                 if(lotes == null) return null;
 
                 var resultado = _mapper.Map<LoteDto[]>(lotes);
-
                 return resultado;
             }
             catch (Exception ex)
@@ -101,6 +97,7 @@ namespace ProEventos.Application
             {
                 var lote = await _lotePersist.GetLoteByIdsAsync(eventoId, loteId);
                 if(lote == null) return null;
+                
                 var resultado = _mapper.Map<LoteDto>(lote);
                 return resultado;
             }

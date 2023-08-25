@@ -15,10 +15,10 @@ namespace ProEventos.API.Controllers
         public LotesController(ILoteService service)
         {
             _service = service;            
-        } 
-
+        }
         [HttpGet("{eventoId}")]
-        public async  Task<IActionResult> Get(int eventoId) {
+        public async  Task<IActionResult> Get(int eventoId) 
+        {
             try
             {
                 var lotes = await _service.GetLotesByEventoIdAsync(eventoId);
@@ -30,11 +30,10 @@ namespace ProEventos.API.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, 
                     $"Erro ao tentar recuperar lotes: {ex.Message}");
             }
-        } 
-        
-
+        }      
         [HttpPut("{eventoId}")]
-        public async Task<IActionResult> SaveLotes(int eventoId, LoteDto[] models) {
+        public async Task<IActionResult> SaveLotes(int eventoId, LoteDto[] models) 
+        {
             try
             {
                 var lotes = await _service.SaveLotes(eventoId, models);
@@ -47,10 +46,10 @@ namespace ProEventos.API.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, 
                     $"Erro ao tentar salvar lotes: {ex.Message}");
             }
-        } 
-    
+        }     
         [HttpDelete("{eventoId}/{loteId}")]
-        public async Task<IActionResult> Delete(int eventoId,int loteId) {
+        public async Task<IActionResult> Delete(int eventoId,int loteId)
+        {
             try
             {
                 var lote = await _service.GetLoteByIdsAsync(eventoId, loteId);
