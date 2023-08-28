@@ -9,8 +9,8 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { Evento } from 'src/models/Evento';
-import { Lote } from 'src/models/Lote';
+import { Evento } from '@app/models/Evento';
+import { Lote } from '@app/models/Lote';
 
 @Component({
   selector: 'app-evento-detalhe',

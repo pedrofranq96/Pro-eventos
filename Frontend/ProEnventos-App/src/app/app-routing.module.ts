@@ -10,30 +10,40 @@ import { EventoListaComponent } from './components/eventos/evento-lista/evento-l
 import { UserComponent } from './components/user/user.component';
 import { LoginComponent } from './components/user/login/login.component';
 import { CadastrarUserComponent } from './components/user/cadastrar-user/cadastrar-user.component';
+import { AuthGuard } from './guard/auth.guard';
+import { HomeComponent } from './components/home/home.component';
 
 const routes: Routes = [
-  {path: 'user', component: UserComponent,
-   children: [
-    {path: 'login', component: LoginComponent},
-    {path: 'cadastro', component: CadastrarUserComponent},
-
-   ]
-  },
-  { path: 'user/perfil', component: PerfilComponent},
-  { path: 'eventos', redirectTo: 'eventos/lista'},
+  {path: '', redirectTo: 'home', pathMatch: 'full'},
   {
-    path: 'eventos', component: EventosComponent,
+    path: '',
+    runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
     children: [
-      { path: 'detalhe/:id', component: EventoDetalheComponent},
-      { path: 'detalhe', component: EventoDetalheComponent},
-      { path: 'lista', component: EventoListaComponent},
+      { path: 'user', redirectTo: 'user/perfil'},
+      { path: 'user/perfil', component: PerfilComponent},
+      { path: 'eventos', redirectTo: 'eventos/lista'},
+      {
+        path: 'eventos', component: EventosComponent,
+        children: [
+          { path: 'detalhe/:id', component: EventoDetalheComponent},
+          { path: 'detalhe', component: EventoDetalheComponent},
+          { path: 'lista', component: EventoListaComponent},
+        ]
+      },
+      { path: 'dashboard', component: DashboardComponent},
+      { path: 'palestrantes', component: PalestrantesComponent},
+      {path: 'contatos', component: ContatosComponent},
     ]
   },
-  { path: 'dashboard', component: DashboardComponent},
-  { path: 'palestrantes', component: PalestrantesComponent},
-  {path: 'contatos', component: ContatosComponent},
-  {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
-  {path: '**', redirectTo: 'dashboard', pathMatch: 'full'},
+  { path: 'user', component: UserComponent,
+      children: [
+        { path: 'login', component: LoginComponent},
+        { path: 'cadastro', component: CadastrarUserComponent }
+      ]
+  },
+  { path: 'home', component: HomeComponent  },
+  { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];
 
 @NgModule({

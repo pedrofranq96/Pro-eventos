@@ -4,7 +4,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { EventoService } from '@app/services/evento.service';
-import { Evento } from 'src/models/Evento';
+import { Evento } from '@app/models/Evento';
 import { environment } from '@environments/environment';
 
 @Component({
