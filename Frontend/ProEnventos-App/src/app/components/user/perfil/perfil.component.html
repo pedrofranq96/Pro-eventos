@@ -118,7 +118,7 @@
       <div class="form-group col-12">
         <label>Descrição</label>
         <input type="text" formControlName="descricao" class="form-control"
-          [ngClass]="{ 'is-invalid': f.descricao.errors && f.descricao.touched }" />
+          [ngClass]="{ 'is-invalid': f.descricao.errors && f.descricao.touched }" placeholder="Descreva algo sobre você..."/>
         <div *ngIf="f.descricao.errors && f.descricao.touched" class="invalid-feedback">
           <div *ngIf="f.descricao.errors.required">Descrição é obrigatório</div>
         </div>
