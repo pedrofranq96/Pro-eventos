@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControlOptions, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ValidatorField } from '@app/helpers/ValidatorField';
 import { UserUpdate } from '@app/models/identity/UserUpdate';
 import { AccountService } from '@app/services/account.service';
+import { environment } from '@environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+
+
 
 @Component({
   selector: 'app-perfil',
@@ -13,72 +13,40 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./perfil.component.scss']
 })
 export class PerfilComponent implements OnInit {
-  public userUpdate = {} as UserUpdate;
-  public form!: FormGroup;
-
-  get f(): any {
-    return this.form.controls;
+  public usuario = {} as UserUpdate;
+  public imagemURL = '';
+  public file : File;
+  public get ehPalestrante(): boolean {
+    return this.usuario.funcao === 'Palestrante';
   }
-  constructor(private fb: FormBuilder, public accountService: AccountService,
-              private router: Router, private toastr: ToastrService, private spinner: NgxSpinnerService) { }
+  constructor(private spinner: NgxSpinnerService, private toastr: ToastrService, private accountService: AccountService) { }
+  ngOnInit() { }
 
-  public onSubmit():void{
-    this.atualizarUsuario();
+  public setFormValue(usuario: UserUpdate) : void {
+    this.usuario = usuario;
+    if(this.usuario.imagemURL){
+      this.imagemURL = environment.apiURL + `resources/perfil/${this.usuario.imagemURL}`;
+    } else {
+      this.imagemURL = 'assets/semImagem.jpeg';
+    }
   }
-  public atualizarUsuario() {
-    this.userUpdate = { ...this.form.value };
+
+  public onFileChange(ev: any): void {
+    const reader = new FileReader();
+    reader.onload = (event: any) => this.imagemURL = event.target.result;
+    this.file = ev.target.files;
+    reader.readAsDataURL(this.file[0]);
+    this.uploadImage();
+  }
+
+  private uploadImage(): void {
     this.spinner.show();
-    this.accountService.updateUser(this.userUpdate).subscribe(
-      () => this.toastr.success('Usuário atualizado com sucesso', 'Sucesso'),
+    this.accountService.postUpload(this.file).subscribe(
+      () => this.toastr.success('Imagem atualizada com sucesso!', 'Sucesso!'),
       (error: any) => {
-        this.toastr.error(error.error);
+        this.toastr.error('Erro ao fazer o upload da imagem', 'Erro!');
         console.error(error);
-      },
-    ).add(() => this.spinner.hide());
-  }
-  public resetForm(event: any):void{
-    event.preventDefault();
-    this.form.reset();
+      }).add(() => this.spinner.hide());
   }
 
-  ngOnInit() {
-    this.validation();
-    this.carregarUsuario();
-  }
-  private carregarUsuario(): void {
-    this.spinner.show();
-    this.accountService.getUser().subscribe(
-      (userRetorno: UserUpdate) => {
-        console.log(userRetorno);
-        this.userUpdate = userRetorno;
-        this.form.patchValue(this.userUpdate);
-        this.toastr.success('Usuário Carregado', 'Sucesso!');
-      },
-      (error: any) => {
-        console.log(error);
-        this.toastr.error('Erro ao tentar carregar usuário', 'Erro');
-        this.router.navigate(['/dashboard']);
-      }
-    ).add(() => this.spinner.hide());
-  }
-
-  private validation(): void {
-
-    const formOptions: AbstractControlOptions = {
-      validators: ValidatorField.MustMatch('password', 'confirmarPassword')
-    };
-
-    this.form = this.fb.group({
-      userName: [''],
-      titulo: ['NaoInformado', Validators.required],
-      primeiroNome: ['',[Validators.required]],
-      ultimoNome: ['',[Validators.required]],
-      email: ['',[Validators.required, Validators.email]],
-      funcao: ['NaoInformado', Validators.required],
-      descricao: ['', Validators.required],
-      phoneNumber: ['',[Validators.required]],
-      password: ['',[Validators.required, Validators.minLength(6)]],
-      confirmarPassword: ['',[Validators.required]],
-    }, formOptions);
-  }
 }

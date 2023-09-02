@@ -15,6 +15,7 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
 import { NgxCurrencyModule } from 'ngx-currency';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -36,21 +37,23 @@ import { LoteService } from './services/lote.service';
 import { AccountService } from './services/account.service';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { HomeComponent } from './components/home/home.component';
+import { PerfilDetalheComponent } from './components/user/perfil/perfil-detalhe/perfil-detalhe.component';
 defineLocale('pt-br', ptBrLocale);
 
 @NgModule({
   declarations: [
     AppComponent,
     EventosComponent,
+    EventoDetalheComponent,
+    EventoListaComponent,
     PalestrantesComponent,
     ContatosComponent,
     DashboardComponent,
     PerfilComponent,
+    PerfilDetalheComponent,
     TituloComponent,
     NavComponent,
     DateTimeFormatPipe,
-    EventoDetalheComponent,
-    EventoListaComponent,
     UserComponent,
     LoginComponent,
     CadastrarUserComponent,
@@ -76,7 +79,8 @@ defineLocale('pt-br', ptBrLocale);
     BsDatepickerModule.forRoot(),
     NgxSpinnerModule,
     NgxCurrencyModule,
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    TabsModule.forRoot()
   ],
   providers: [EventoService, LoteService, AccountService,
           { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
