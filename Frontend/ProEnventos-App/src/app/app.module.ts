@@ -38,6 +38,11 @@ import { AccountService } from './services/account.service';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { HomeComponent } from './components/home/home.component';
 import { PerfilDetalheComponent } from './components/user/perfil/perfil-detalhe/perfil-detalhe.component';
+import { PalestranteListaComponent } from './components/palestrantes/palestrante-lista/palestrante-lista.component';
+import { PalestranteService } from './services/palestrante.service';
+import { PalestranteDetalheComponent } from './components/palestrantes/palestrante-detalhe/palestrante-detalhe.component';
+import { RedeSocialService } from './services/redeSocial.service';
+import { RedesSociaisComponent } from './components/redesSociais/redesSociais.component';
 defineLocale('pt-br', ptBrLocale);
 
 @NgModule({
@@ -47,17 +52,20 @@ defineLocale('pt-br', ptBrLocale);
     EventoDetalheComponent,
     EventoListaComponent,
     PalestrantesComponent,
+    PalestranteListaComponent,
+    PalestranteDetalheComponent,
     ContatosComponent,
     DashboardComponent,
     PerfilComponent,
     PerfilDetalheComponent,
+    UserComponent,
     TituloComponent,
     NavComponent,
     DateTimeFormatPipe,
-    UserComponent,
     LoginComponent,
     CadastrarUserComponent,
-    HomeComponent
+    HomeComponent,
+    RedesSociaisComponent
   ],
   imports: [
     BrowserModule,
@@ -82,7 +90,7 @@ defineLocale('pt-br', ptBrLocale);
     PaginationModule.forRoot(),
     TabsModule.forRoot()
   ],
-  providers: [EventoService, LoteService, AccountService,
+  providers: [EventoService, LoteService, AccountService, PalestranteService, RedeSocialService,
           { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })

@@ -80,8 +80,6 @@
                 Email deve conter o endereço de email válido.
               </div>
             </div>
-
-
           </div>
         </div>
         <div class="card-footer">
@@ -173,7 +171,6 @@
       </div>
     </div>
     </div>
-
     <div class="card rounded shadow-sm mt-3" *ngIf="editMode">
       <div class="p-3">
         <div class="d-flex border-bottom">
@@ -184,11 +181,10 @@
             <i class="fas fa-share-square"></i>
           </h2>
         </div>
-        <!-- <app-redesSociais [eventoId]="eventoId"></app-redesSociais> -->
+        <app-redesSociais [eventoId]="eventoId"></app-redesSociais>
       </div>
     </div>
   </div>
-
   <div class="col-md-4" *ngIf="editMode">
     <div [formGroup]="form" class="card-evento-view shadow-sm">
       <div class="form-row">

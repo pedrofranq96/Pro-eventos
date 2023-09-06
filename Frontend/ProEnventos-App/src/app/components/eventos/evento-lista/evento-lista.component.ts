@@ -24,7 +24,7 @@ export class EventoListaComponent implements OnInit {
   public marginImg = 2;
   public showImg = true;
   public pagination = {} as Pagination;
-  termoBuscaChanged: Subject<string> = new Subject<string>();
+  public termoBuscaChanged: Subject<string> = new Subject<string>();
 
 
   public filtrarEventos(evt: any): void {
